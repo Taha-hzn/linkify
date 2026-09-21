@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linkify | File to URL</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="top-ad ad-banner" data-ad-slot="top">Ad Space<br />970x250</div>
+
+      <div class="page-shell">
+        <div class="card">
+          <header class="header">
+            <div class="brand">
+              <div class="brand-mark">
+                <img src="Logo.png" alt="Website logo" />
+              </div>
+              <span>Linkify</span>
+            </div>
+            <div class="header-actions">
+              <div class="lang-picker">
+                <span class="lang-globe" aria-hidden="true">🌐</span>
+                <select class="lang-select" id="languageSelect" aria-label="Select language">
+                  <option value="en">English</option>
+                  <option value="ar">Arabic</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="tr">Turkish</option>
+                  <option value="pt">Portuguese</option>
+                  <option value="id">Indonesian</option>
+                  <option value="ru">Russian</option>
+                  <option value="hi">Hindi</option>
+                  <option value="ja">Japanese</option>
+                  <option value="ko">Korean</option>
+                  <option value="zh">Chinese</option>
+                </select>
+              </div>
+            </div>
+          </header>
+
+          <main class="main">
+            <section class="panel">
+            <h1 data-i18n="heroTitle">Turn any file into a downloadable link.</h1>
+            <p class="tagline" data-i18n="heroText">
+              Upload a document, image, or other file and instantly generate a real downloadable link for quick sharing.
+            </p>
+            <p class="tagline policy-tagline" data-i18n="policyText">
+              Illegal, harmful, or sexual content is not allowed. Maximum file size: 1 GB.
+            </p>
+
+            <label class="upload-zone" id="dropZone" for="fileInput">
+              <div class="upload-icon">+</div>
+              <div class="upload-title" data-i18n="uploadText">Choose a file or drop it here</div>
+              <div class="upload-subtitle" data-i18n="uploadSubtitle">Supports images, documents, PDFs, audio, and more. Maximum 1 GB per file.</div>
+            </label>
+            <input id="fileInput" type="file" multiple disabled />
+
+            <div class="consent-box">
+              <div class="consent-row">
+                <input id="termsConsent" type="checkbox" />
+                <label for="termsConsent">
+                  I agree to the <a href="#terms" class="terms-link">Terms</a> and <a href="#privacy" class="terms-link">Policy</a>.
+                </label>
+              </div>
+            </div>
+
+            <div class="meta">
+              <span class="meta-chip" data-i18n="chip1">Instant conversion</span>
+              <span class="meta-chip" data-i18n="chip2">Browser-based</span>
+              <span class="meta-chip" data-i18n="chip3">No upload required</span>
+            </div>
+
+            <div class="file-card" id="fileCard">
+              <div class="file-header">
+                <div>
+                  <div class="file-name" id="fileName">No file selected</div>
+                  <div class="file-size" id="fileSize">0 KB</div>
+                </div>
+              </div>
+
+                  <div class="share-settings">
+                    <div class="settings-grid">
+                      <label class="setting">Expiration
+                        <select id="expiresHours"><option value="1">1 hour</option><option value="24" selected>24 hours</option><option value="168">7 days</option></select>
+                      </label>
+                      <label class="setting">Optional password
+                        <input id="filePassword" type="password" placeholder="Sensitive file password" autocomplete="new-password" />
+                      </label>
+                    </div>
+                    <label class="toggle-row"><input id="passwordToggle" type="checkbox" /> Password protection</label>
+                    <label class="toggle-row"><input id="autoDelete" type="checkbox" checked /> Auto-delete after expiration</label>
+                  </div>
+
+                  <div class="preview-panel">
+                    <strong>Preview before sharing</strong>
+                    <div class="preview-content" id="previewContent">Select a file to preview it here.</div>
+                  </div>
+
+              <div class="actions">
+                <button class="primary-btn" id="generateBtn" type="button">Generate Link</button>
+                <button class="secondary-btn" id="resetBtn" type="button">Reset</button>
+              </div>
+            </div>
+          </section>
+
+          <aside class="panel">
+            <div class="output-box">
+              <label class="label" for="urlOutput">Download Link</label>
+              <textarea id="urlOutput" class="url-output" readonly placeholder="Your downloadable file link will appear here..."></textarea>
+
+              <div class="link-row" id="linkRow" hidden>
+                <button class="primary-btn" id="copyBtn" type="button" hidden>Copy Link</button>
+                <a class="link-button secondary-btn" id="previewLink" href="#" target="_blank" rel="noreferrer" download hidden>Download</a>
+                <button class="secondary-btn" id="emailBtn" type="button" hidden>Email Send</button>
+              </div>
+
+              <div class="qr-wrap blurred" id="qrWrap" aria-live="polite">
+                <img id="qrCode" alt="QR code for mobile sharing" />
+              </div>
+              <div class="share-settings" id="integrationsPanel">
+                <label class="setting">Webhook URL (Slack, Discord, or Telegram bot webhook)
+                  <input id="webhookUrl" type="url" placeholder="https://hooks..." />
+                </label>
+                <button class="secondary-btn" id="webhookBtn" type="button" style="margin-top:10px">Send to webhook</button>
+              </div>
+
+              <div class="analytics-panel" id="analyticsPanel" hidden>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><strong>Link analytics</strong><button class="secondary-btn" id="analyticsRefresh" type="button">Refresh</button></div><div id="analyticsSummary" style="margin:10px 0;color:var(--muted)"></div>
+                <table><thead><tr><th>Event</th><th>Timestamp</th></tr></thead><tbody id="analyticsRows"></tbody></table>
+              </div>
+
+              <div id="status" class="status" aria-live="polite"></div>
+            </div>
+            </aside>
+          </main>
+        </div>
+
+      </div>
+
+  <div class="bottom-ad ad-banner" data-ad-slot="bottom">Ad Space<br />970x250</div>
+
+      <div class="benefits-grid">
+        <section class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <h3 data-i18n="benefitTitle1">Fast and simple</h3>
+          <p data-i18n="benefitText1">Create a shareable download link instantly without complicated setup or waiting times.</p>
+        </section>
+
+        <section class="benefit-card">
+          <div class="benefit-icon">🔒</div>
+          <h3 data-i18n="benefitTitle2">Private by design</h3>
+          <p data-i18n="benefitText2">Your files stay in your browser, helping keep your content local and secure.</p>
+        </section>
+
+        <section class="benefit-card">
+          <div class="benefit-icon">📦</div>
+          <h3 data-i18n="benefitTitle3">Works with many files</h3>
+          <p data-i18n="benefitText3">Use it for documents, images, PDFs, audio, and other common file types.</p>
+        </section>
+      </div>
+
+      <div class="info-grid">
+        <section class="info-card" id="terms">
+          <h3 data-i18n="termsTitle">Terms of Service</h3>
+          <p data-i18n="termsText">
+            This tool is for personal use only. Do not upload illegal, harmful, or sexual content.
+          </p>
+          <p style="margin-top: 12px;" data-i18n="termsPolicy">
+            Users must not share malware, hate material, scams, or content that breaks local or international law.
+          </p>
+        </section>
+
+        <section class="info-card" id="privacy">
+          <h3 data-i18n="privacyTitle">Privacy Policy</h3>
+          <p data-i18n="privacyText">
+            Files are uploaded to generate links and stored until their expiry or deletion. We retain uploader IP/session metadata, expiry, and download counts to operate the service and investigate abuse.
+          </p>
+        </section>
+
+        <section class="info-card" id="contact">
+          <h3 data-i18n="contactTitle">Contact Us</h3>
+          <ul>
+            <li>
+              <a class="telegram-link" href="https://t.me/linkify_support1" target="_blank" rel="noreferrer">
+                <img class="telegram-icon" src="telegram.png" alt="Telegram" />
+                @linkify_support1
+              </a>
+            </li>
+            <li data-i18n="contactText">For support or questions, message us on Telegram.</li>
+          </ul>
+        </section>
+
+        <section class="info-card" id="report">
+          <h3>Report a file</h3>
+          <p>If a shared file violates the Terms of Service, send a takedown report for review.</p>
+          <form id="reportForm" class="report-form">
+            <input id="reportFileId" type="text" placeholder="File ID or share link" required />
+            <select id="reportReason" required>
+              <option value="">Choose a reason</option>
+              <option value="malware">Malware or phishing</option>
+              <option value="copyright">Copyright infringement</option>
+              <option value="illegal">Illegal or harmful content</option>
+              <option value="privacy">Privacy violation</option>
+              <option value="other">Other abuse</option>
+            </select>
+            <textarea id="reportDetails" rows="3" maxlength="2000" placeholder="Briefly describe the issue"></textarea>
+            <button class="secondary-btn" type="submit">Submit report</button>
+            <div id="reportStatus" class="status" aria-live="polite"></div>
+          </form>
+        </section>
+      </div>
+
+      <div class="footer-links">
+        <a href="#terms">Terms of Service</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#report">Report a file</a>
+      </div>
+
+      <div class="contact-box">
+        <img class="telegram-icon" src="telegram.png" alt="Telegram" />
+        <span>Telegram:</span>
+        <a class="telegram-link" href="https://t.me/linkify_support1" target="_blank" rel="noreferrer">@linkify_support1</a>
+      </div>
+    </div>
+
+    <div class="email-dialog" id="emailDialog" hidden>
+      <div class="email-dialog-card" role="dialog" aria-modal="true" aria-labelledby="emailDialogTitle">
+        <h3 id="emailDialogTitle">Email this link</h3>
+        <input id="emailRecipient" type="text" placeholder="person@example.com, team@example.com" autocomplete="email" />
+        <div class="email-dialog-actions">
+          <button class="secondary-btn" id="emailCancel" type="button">Cancel</button>
+          <button class="primary-btn" id="emailSend" type="button">Send Email</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+      const fileInput = document.getElementById('fileInput');
+      const dropZone = document.getElementById('dropZone');
+      const fileCard = document.getElementById('fileCard');
+      const fileName = document.getElementById('fileName');
+      const fileSize = document.getElementById('fileSize');
+      const generateBtn = document.getElementById('generateBtn');
+      const urlOutput = document.getElementById('urlOutput');
+      const status = document.getElementById('status');
+      const copyBtn = document.getElementById('copyBtn');
+      const previewLink = document.getElementById('previewLink');
+      const linkRow = document.getElementById('linkRow');
+      const resetBtn = document.getElementById('resetBtn');
+      const languageSelect = document.getElementById('languageSelect');
+      const termsConsent = document.getElementById('termsConsent');
+      const expiresHours = document.getElementById('expiresHours');
+      const passwordToggle = document.getElementById('passwordToggle');
+      const filePassword = document.getElementById('filePassword');
+      const autoDelete = document.getElementById('autoDelete');
+      const previewContent = document.getElementById('previewContent');
+      const qrWrap = document.getElementById('qrWrap');
+      const qrCode = document.getElementById('qrCode');
+      const emailBtn = document.getElementById('emailBtn');
+      const webhookUrl = document.getElementById('webhookUrl');
+      const webhookBtn = document.getElementById('webhookBtn');
+      const analyticsPanel = document.getElementById('analyticsPanel');
+      const analyticsSummary = document.getElementById('analyticsSummary');
+      const analyticsRows = document.getElementById('analyticsRows');
+      const analyticsRefresh = document.getElementById('analyticsRefresh');
+      const emailDialog = document.getElementById('emailDialog');
+      const emailRecipient = document.getElementById('emailRecipient');
+      const emailCancel = document.getElementById('emailCancel');
+      const emailSend = document.getElementById('emailSend');
+      const reportForm = document.getElementById('reportForm');
+      const reportFileId = document.getElementById('reportFileId');
+      const reportReason = document.getElementById('reportReason');
+      const reportDetails = document.getElementById('reportDetails');
+      const reportStatus = document.getElementById('reportStatus');
+      const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+
+      const translations = {
+        en: {
+          heroTitle: 'Turn any file into a downloadable link.',
+          heroText: 'Upload a document, image, or other file and instantly generate a real downloadable link for quick sharing.',
+          policyText: 'Prohibited uploads include pornography, sexual content, illegal material, malware, hate content, and other unlawful or harmful files. Maximum file size: 1 GB.',
+          uploadText: 'Choose a file or drop it here',
+          uploadSubtitle: 'Supports images, documents, PDFs, audio, and more. Maximum 1 GB per file.',
+          chip1: 'Instant conversion',
+          chip2: 'Browser-based',
+          chip3: 'No upload required',
+          benefitTitle1: 'Fast and simple',
+          benefitText1: 'Create a shareable download link instantly without complicated setup or waiting times.',
+          benefitTitle2: 'Private by design',
+          benefitText2: 'Your files stay in your browser, helping keep your content local and secure.',
+          benefitTitle3: 'Works with many files',
+          benefitText3: 'Use it for documents, images, PDFs, audio, and other common file types.',
+          termsTitle: 'Terms of Service',
+          termsText: 'This tool is provided for convenience and personal use. You agree to use it responsibly and not for unlawful, harmful, or abusive activity.',
+          termsPolicy: 'Users may not upload or share illegal content, including pornography, explicit sexual material, child sexual abuse material, malware, piracy, hate speech, violent content, scams, or any other content that violates local, national, or international law.',
+          privacyTitle: 'Privacy Policy',
+          privacyText: 'Files are uploaded to generate links and stored until their expiry or deletion. We retain uploader IP/session metadata, expiry, and download counts to operate the service and investigate abuse.',
+          contactTitle: 'Contact Us',
+          contactText: 'For support or questions, message us on Telegram.'
+        },
+        ar: {
+          heroTitle: 'حوّل أي ملف إلى رابط قابل للتنزيل.',
+          heroText: 'قم بتحميل مستند أو صورة أو أي ملف آخر وأنشئ رابط تنزيل فورياً لمشاركته بسرعة.',
+          policyText: 'الملفات المحظورة تشمل الإباحية والمحتوى الجنسي غير القانوني والبرامج الضارة والكراهية وغيرها من الملفات الضارة أو غير القانونية.',
+          uploadText: 'اسحب الملف هنا أو انقر للتصفح',
+          uploadSubtitle: 'يدعم الصور والمستندات والملفات PDF والصوت وغيرها',
+          chip1: 'تحويل فوري',
+          chip2: 'يعتمد على المتصفح',
+          chip3: 'لا توجد حاجة للتحميل',
+          benefitTitle1: 'سريع وبسيط',
+          benefitText1: 'أنشئ رابط تنزيل قابل للمشاركة فوراً دون إعدادات معقدة أو انتظار.',
+          benefitTitle2: 'خاص من التصميم',
+          benefitText2: 'تظل ملفاتك في متصفحك، مما يساعد على إبقائها محلية وآمنة.',
+          benefitTitle3: 'يعمل مع ملفات متعددة',
+          benefitText3: 'استخدمه للمستندات والصور والملفات PDF والصوت والأنواع الشائعة الأخرى.',
+          termsTitle: 'شروط الخدمة',
+          termsText: 'يُقدم هذا الأدوات للراحة والاستخدام الشخصي. أنت توافق على استخدامه بشكل مسؤول وعدم استخدامه في أنشطة غير قانونية أو ضارة أو مسيئة.',
+          termsPolicy: 'لا يجوز للمستخدمين تحميل أو مشاركة أي محتوى غير قانوني، بما في ذلك الإباحية أو المواد الجنسية الصريحة أو المواد المتصلة بالإساءة للأطفال أو البرامج الضارة أو القرصنة أو خطاب الكراهية أو المحتوى العنيف أو الاحتيال أو أي محتوى آخر ينتهك القوانين المحلية أو الوطنية أو الدولية.',
+          privacyTitle: 'سياسة الخصوصية',
+          privacyText: 'يتم معالجة الملفات محلياً داخل المتصفح، وليس يتم رفعها إلى خوادمنا بشكل افتراضي. نحن لا نخزن ملفاتك بعد مغادرة الصفحة.',
+          contactTitle: 'تواصل معنا',
+          contactText: 'للدعم أو الأسئلة، أرسل لنا رسالة عبر تيليجرام.'
+        },
+        es: {
+          heroTitle: 'Convierte cualquier archivo en un enlace descargable.',
+          heroText: 'Sube un documento, imagen u otro archivo y genera instantáneamente un enlace de descarga para compartirlo rápidamente.',
+          policyText: 'Las cargas prohibidas incluyen pornografía, contenido sexual, material ilegal, malware, contenido de odio y otros archivos dañinos o ilegales.',
+          uploadText: 'Arrastra un archivo aquí o haz clic para explorar',
+          uploadSubtitle: 'Compatible con imágenes, documentos, PDF, audio y más',
+          chip1: 'Conversión instantánea',
+          chip2: 'Basado en navegador',
+          chip3: 'No se requiere subir',
+          benefitTitle1: 'Rápido y sencillo',
+          benefitText1: 'Crea un enlace de descarga compartible al instante sin configuraciones complejas.',
+          benefitTitle2: 'Privado por diseño',
+          benefitText2: 'Tus archivos se quedan en tu navegador para mantener tu contenido local y seguro.',
+          benefitTitle3: 'Funciona con muchos archivos',
+          benefitText3: 'Úsalo para documentos, imágenes, PDF, audio y otros tipos de archivos comunes.',
+          termsTitle: 'Términos del servicio',
+          termsText: 'Esta herramienta se proporciona para conveniencia y uso personal. Aceptas usarla de manera responsable y no para actividades ilícitas, dañinas o abusivas.',
+          termsPolicy: 'Los usuarios no pueden subir ni compartir contenido ilegal, incluida la pornografía, el material sexual explícito, el abuso sexual infantil, malware, piratería, discursos de odio, contenido violento, estafas o cualquier otro contenido que viole la ley.',
+          privacyTitle: 'Política de privacidad',
+          privacyText: 'Los archivos se procesan localmente en tu navegador y no se suben a nuestros servidores por defecto. No almacenamos tus archivos después de salir de la página.',
+          contactTitle: 'Contáctanos',
+          contactText: 'Para soporte o preguntas, envíanos un mensaje por Telegram.'
+        },
+        fr: {
+          heroTitle: 'Transformez n’importe quel fichier en lien de téléchargement.',
+          heroText: 'Téléchargez un document, une image ou tout autre fichier et générez instantanément un lien de téléchargement partageable.',
+          policyText: 'Les fichiers interdits incluent la pornographie, le contenu sexuel, les contenus illégaux, les malwares, les discours de haine et d’autres fichiers nuisibles ou illégaux.',
+          uploadText: 'Déposez un fichier ici ou cliquez pour parcourir',
+          uploadSubtitle: 'Prend en charge les images, documents, PDF, audio et plus',
+          chip1: 'Conversion instantanée',
+          chip2: 'Fonctionne dans le navigateur',
+          chip3: 'Aucun téléchargement requis',
+          benefitTitle1: 'Rapide et simple',
+          benefitText1: 'Créez un lien de téléchargement partageable instantanément sans configuration compliquée.',
+          benefitTitle2: 'Privé par conception',
+          benefitText2: 'Vos fichiers restent dans votre navigateur pour garder votre contenu local et sécurisé.',
+          benefitTitle3: 'Compatible avec de nombreux fichiers',
+          benefitText3: 'Utilisez-le pour les documents, images, PDF, audio et autres types de fichiers courants.',
+          termsTitle: 'Conditions d’utilisation',
+          termsText: 'Cet outil est fourni pour votre commodité et votre usage personnel. Vous acceptez de l’utiliser de manière responsable et non pour des activités illégales, nuisibles ou abusives.',
+          termsPolicy: 'Les utilisateurs ne peuvent pas téléverser ou partager de contenu illégal, y compris la pornographie, le matériel sexuel explicite, les abus sexuels sur enfants, les malwares, le piratage, la haine, le contenu violent, les arnaques ou tout autre contenu contraire à la loi.',
+          privacyTitle: 'Politique de confidentialité',
+          privacyText: 'Les fichiers sont traités localement dans votre navigateur et ne sont pas téléversés sur nos serveurs par défaut. Nous ne stockons pas vos fichiers après avoir quitté la page.',
+          contactTitle: 'Contactez-nous',
+          contactText: 'Pour obtenir de l’aide ou poser des questions, envoyez-nous un message sur Telegram.'
+        },
+        de: {
+          heroTitle: 'Wandle jede Datei in einen Download-Link um.',
+          heroText: 'Lade ein Dokument, Bild oder eine andere Datei hoch und erzeuge sofort einen teilbaren Download-Link.',
+          policyText: 'Verbotene Uploads umfassen Pornografie, sexuelle Inhalte, illegales Material, Malware, Hassinhalte und andere schädliche oder rechtswidrige Dateien.',
+          uploadText: 'Datei hier ablegen oder klicken, um auszuwählen',
+          uploadSubtitle: 'Unterstützt Bilder, Dokumente, PDFs, Audio und mehr',
+          chip1: 'Sofortige Umwandlung',
+          chip2: 'Browserbasiert',
+          chip3: 'Kein Upload erforderlich',
+          benefitTitle1: 'Schnell und einfach',
+          benefitText1: 'Erstelle sofort einen teilbaren Download-Link ohne komplizierte Einrichtung.',
+          benefitTitle2: 'Datenschutz von Anfang an',
+          benefitText2: 'Deine Dateien bleiben im Browser und bleiben so lokal und sicher.',
+          benefitTitle3: 'Funktioniert mit vielen Dateien',
+          benefitText3: 'Verwende es für Dokumente, Bilder, PDFs, Audio und andere gängige Dateitypen.',
+          termsTitle: 'Nutzungsbedingungen',
+          termsText: 'Dieses Tool wird zu Ihrer Bequemlichkeit und für den persönlichen Gebrauch bereitgestellt. Sie erklären sich damit einverstanden, es verantwortungsvoll zu verwenden und nicht für rechtswidrige, schädliche oder missbräuchliche Aktivitäten.',
+          termsPolicy: 'Benutzer dürfen keine illegalen Inhalte hochladen oder teilen, darunter Pornografie, explizite sexuelle Inhalte, Kindesmissbrauch, Malware, Piraterie, Hassrede, Gewaltinhalte, Betrug oder andere gegen das Gesetz verstoßende Inhalte.',
+          privacyTitle: 'Datenschutzrichtlinie',
+          privacyText: 'Dateien werden lokal im Browser verarbeitet und standardmäßig nicht auf unsere Server hochgeladen. Wir speichern Ihre Dateien nach dem Verlassen der Seite nicht.',
+          contactTitle: 'Kontakt',
+          contactText: 'Für Support oder Fragen senden Sie uns bitte eine Nachricht über Telegram.'
+        },
+        tr: {
+          heroTitle: 'Her dosyayı indirilebilir bir linke dönüştürün.',
+          heroText: 'Bir belge, resim veya başka bir dosya yükleyin ve hızlı paylaşım için anında indirilebilir bir link oluşturun.',
+          policyText: 'Yasak yüklemeler arasında pornografi, cinsel içerik, illegal materyal, zararlı yazılım, nefret içerikleri ve diğer zararlı veya yasa dışı dosyalar yer alır.',
+          uploadText: 'Dosyayı buraya sürükleyin veya göz atmak için tıklayın',
+          uploadSubtitle: 'Resim, belge, PDF, ses ve daha fazlasını destekler',
+          chip1: 'Anında dönüştürme',
+          chip2: 'Tarayıcı tabanlı',
+          chip3: 'Yükleme gerekmez',
+          benefitTitle1: 'Hızlı ve basit',
+          benefitText1: 'Karmaşık kurulum gerektirmeden anında paylaşılabilir bir indirme linki oluşturun.',
+          benefitTitle2: 'Özel ve güvenli',
+          benefitText2: 'Dosyalarınız tarayıcınızda kalır, böylece içerik yerel ve güvenli kalır.',
+          benefitTitle3: 'Birçok dosya ile çalışır',
+          benefitText3: 'Belgeler, resimler, PDF’ler, ses dosyaları ve diğer yaygın dosya türleri için kullanın.',
+          termsTitle: 'Kullanım Şartları',
+          termsText: 'Bu araç kolaylık ve kişisel kullanım için sunulmuştur. Yasal olmayan, zararlı veya kötüye kullanılan faaliyetlerde bulunmamak üzere sorumlu bir şekilde kullanmayı kabul edersiniz.',
+          termsPolicy: 'Kullanıcılar pornografi, açık cinsel içerik, çocuk cinsel istismarı, kötü amaçlı yazılım, korsanlık, nefret söylemi, şiddet içeriği, dolandırıcılık ve yasaları ihlal eden diğer içerikleri yükleyemez veya paylaşamaz.',
+          privacyTitle: 'Gizlilik Politikası',
+          privacyText: 'Dosyalar tarayıcıda yerelde işlenir ve varsayılan olarak sunucularımıza yüklenmez. Sayfadan ayrıldıktan sonra dosyalarınızı saklamayız.',
+          contactTitle: 'İletişim',
+          contactText: 'Destek veya sorular için Telegram üzerinden bize yazın.'
+        },
+        pt: {
+          heroTitle: 'Transforme qualquer arquivo em um link para download.',
+          heroText: 'Carregue um documento, imagem ou outro arquivo e gere instantaneamente um link de download para compartilhar.',
+          policyText: 'Uploads proibidos incluem pornografia, conteúdo sexual, material ilegal, malware, discurso de ódio e outros arquivos prejudiciais ou ilegais.',
+          uploadText: 'Arraste um arquivo aqui ou clique para procurar',
+          uploadSubtitle: 'Suporta imagens, documentos, PDFs, áudio e muito mais',
+          chip1: 'Conversão instantânea',
+          chip2: 'Baseado no navegador',
+          chip3: 'Sem upload necessário',
+          benefitTitle1: 'Rápido e simples',
+          benefitText1: 'Crie um link compartilhável de download instantaneamente sem configuração complicada.',
+          benefitTitle2: 'Privado por design',
+          benefitText2: 'Seus arquivos ficam no navegador, mantendo o conteúdo local e seguro.',
+          benefitTitle3: 'Funciona com vários tipos',
+          benefitText3: 'Use para documentos, imagens, PDFs, áudio e outros tipos comuns de arquivos.',
+          termsTitle: 'Termos de uso',
+          termsText: 'Esta ferramenta é fornecida por conveniência e uso pessoal. Você concorda em usá-la com responsabilidade e não para atividades ilegais, nocivas ou abusivas.',
+          termsPolicy: 'Os usuários não podem fazer upload ou compartilhar conteúdo ilegal, incluindo pornografia, material sexual explícito, abuso sexual infantil, malware, pirataria, discurso de ódio, conteúdo violento, golpes ou qualquer outro conteúdo que viole a lei.',
+          privacyTitle: 'Política de privacidade',
+          privacyText: 'Os arquivos são processados localmente no navegador e não são enviados para os nossos servidores por padrão. Não armazenamos seus arquivos depois que você sai da página.',
+          contactTitle: 'Contato',
+          contactText: 'Para suporte ou dúvidas, fale conosco pelo Telegram.'
+        },
+        id: {
+          heroTitle: 'Ubah file apa pun menjadi tautan unduhan.',
+          heroText: 'Unggah dokumen, gambar, atau file lain dan buat tautan unduhan yang bisa dibagikan secara instan.',
+          policyText: 'Unggahan yang dilarang termasuk pornografi, konten seksual, materi ilegal, malware, konten kebencian, dan file berbahaya atau ilegal lainnya.',
+          uploadText: 'Taruh file di sini atau klik untuk menelusuri',
+          uploadSubtitle: 'Mendukung gambar, dokumen, PDF, audio, dan lainnya',
+          chip1: 'Konversi instan',
+          chip2: 'Berbasis browser',
+          chip3: 'Tidak perlu upload',
+          benefitTitle1: 'Cepat dan sederhana',
+          benefitText1: 'Buat tautan unduhan yang bisa dibagikan secara instan tanpa pengaturan rumit.',
+          benefitTitle2: 'Privat dari awal',
+          benefitText2: 'File Anda tetap di browser Anda, sehingga konten tetap lokal dan aman.',
+          benefitTitle3: 'Bekerja dengan banyak file',
+          benefitText3: 'Gunakan untuk dokumen, gambar, PDF, audio, dan jenis file umum lainnya.',
+          termsTitle: 'Syarat Layanan',
+          termsText: 'Alat ini disediakan untuk kenyamanan dan penggunaan pribadi. Anda setuju untuk menggunakannya secara bertanggung jawab dan bukan untuk aktivitas yang melanggar hukum, berbahaya, atau merugikan.',
+          termsPolicy: 'Pengguna dilarang mengunggah atau membagikan konten ilegal, termasuk pornografi, materi seksual eksplisit, pelecehan seksual anak, malware, pembajakan, ujaran kebencian, konten kekerasan, penipuan, atau konten lain yang melanggar hukum.',
+          privacyTitle: 'Kebijakan Privasi',
+          privacyText: 'File diproses secara lokal di browser Anda dan tidak diunggah ke server kami secara default. Kami tidak menyimpan file Anda setelah Anda meninggalkan halaman.',
+          contactTitle: 'Hubungi Kami',
+          contactText: 'Untuk dukungan atau pertanyaan, kirim pesan lewat Telegram.'
+        },
+        ru: {
+          heroTitle: 'Преобразуйте любой файл в ссылку для скачивания.',
+          heroText: 'Загрузите документ, изображение или другой файл и мгновенно создайте ссылку для быстрого обмена.',
+          policyText: 'Запрещены загрузки с порнографией, сексуальным контентом, незаконным материалом, вредоносным ПО, экстремистским контентом и другими опасными или незаконными файлами.',
+          uploadText: 'Перетащите файл сюда или нажмите, чтобы выбрать',
+          uploadSubtitle: 'Поддерживаются изображения, документы, PDF, аудио и многое другое',
+          chip1: 'Мгновенное преобразование',
+          chip2: 'Работает в браузере',
+          chip3: 'Загрузка не требуется',
+          benefitTitle1: 'Быстро и просто',
+          benefitText1: 'Создавайте общую ссылку для скачивания мгновенно без сложной настройки.',
+          benefitTitle2: 'Приватность с самого начала',
+          benefitText2: 'Ваши файлы остаются в вашем браузере, поэтому контент остаётся локальным и безопасным.',
+          benefitTitle3: 'Работает с разными файлами',
+          benefitText3: 'Подходит для документов, изображений, PDF, аудио и других популярных форматов.',
+          termsTitle: 'Условия использования',
+          termsText: 'Этот инструмент предоставляется для удобства и личного использования. Вы соглашаетесь использовать его ответственно и не для незаконной, вредоносной или abusive activity.',
+          termsPolicy: 'Пользователи не могут загружать или распространять незаконный контент, включая порнографию, откровенно сексуальный контент, материалы о сексуальном насилии над детьми, вредоносное ПО, пиратство, ненавистнические высказывания, насилие, мошенничество и любой другой контент, нарушающий законы.',
+          privacyTitle: 'Политика конфиденциальности',
+          privacyText: 'Файлы обрабатываются локально в вашем браузере и по умолчанию не загружаются на наши серверы. Мы не храним ваши файлы после выхода с страницы.',
+          contactTitle: 'Связаться с нами',
+          contactText: 'Для поддержки или вопросов напишите нам в Telegram.'
+        },
+        hi: {
+          heroTitle: 'किसी भी फाइल को डाउनलोड योग्य लिंक में बदलें।',
+          heroText: 'किसी दस्तावेज़, तस्वीर या दूसरी फाइल को अपलोड करें और तुरंत साझा करने योग्य डाउनलोड लिंक बनाएं।',
+          policyText: 'प्रतिबंधित अपलोड में अश्लीलता, यौन सामग्री, अवैध सामग्री, मैलवेयर, नफ़रतपूर्ण सामग्री और अन्य हानिकारक या अवैध फाइलें शामिल हैं।',
+          uploadText: 'फाइल यहां ड्रैग करें या चुनने के लिए क्लिक करें',
+          uploadSubtitle: 'इमेज, दस्तावेज़, PDF, ऑडियो और कई अन्य फाइलें समर्थित हैं',
+          chip1: 'तुरंत कन्वर्ज़न',
+          chip2: 'ब्राउज़र पर आधारित',
+          chip3: 'अपलोड की ज़रूरत नहीं',
+          benefitTitle1: 'तेज़ और सरल',
+          benefitText1: 'जटिल सेटअप के बिना तुरंत साझा करने योग्य डाउनलोड लिंक बनाएं।',
+          benefitTitle2: 'डिज़ाइन से निजी',
+          benefitText2: 'आपकी फाइलें आपके ब्राउज़र में रहती हैं, जिससे सामग्री स्थानीय और सुरक्षित रहती है।',
+          benefitTitle3: 'कई फाइलों के साथ काम करता है',
+          benefitText3: 'दस्तावेज़, तस्वीरें, PDF, ऑडियो और अन्य सामान्य फाइल प्रकारों के लिए उपयोग करें।',
+          termsTitle: 'सेवा की शर्तें',
+          termsText: 'यह टूल सुविधा और व्यक्तिगत उपयोग के लिए दिया गया है। आप इसका उपयोग जिम्मेदारी से करने और अवैध, हानिकारक या खराब उद्देश्य के लिए नहीं करने पर सहमत हैं।',
+          termsPolicy: 'उपयोगकर्ता अवैध सामग्री अपलोड या साझा नहीं कर सकते, जिसमें अश्लीलता, स्पष्ट यौन सामग्री, बच्चों के साथ अश्लीलता, मैलवेयर, फिल्मों/सॉफ़्टवेयर की अवैध कॉपी, वैमनस्यपूर्ण सामग्री, हिंसक सामग्री, धोखाधड़ी या किसी भी विधि-विरुद्ध सामग्री शामिल हैं।',
+          privacyTitle: 'गोपनीयता नीति',
+          privacyText: 'फाइलें आपके ब्राउज़र में स्थानीय रूप से प्रोसेस होती हैं और डिफ़ॉल्ट रूप से हमारे सर्वर पर अपलोड नहीं होती हैं। पेज छोड़ने के बाद हम आपकी फाइलें नहीं रखते हैं।',
+          contactTitle: 'संपर्क करें',
+          contactText: 'सहायता या सवाल के लिए Telegram पर हमें संदेश भेजें।'
+        },
+        ja: {
+          heroTitle: '任意のファイルをダウンロード用リンクに変換します。',
+          heroText: '書類、画像、その他のファイルをアップロードして、すぐに共有できるダウンロードリンクを作成します。',
+          policyText: '禁止されているアップロードには、ポルノ、性的コンテンツ、違法な素材、マルウェア、ヘイトコンテンツなどの有害または違法なファイルが含まれます。',
+          uploadText: 'ここにファイルをドラッグするか、クリックして選択',
+          uploadSubtitle: '画像、ドキュメント、PDF、音声などに対応',
+          chip1: '即時変換',
+          chip2: 'ブラウザベース',
+          chip3: 'アップロード不要',
+          benefitTitle1: '高速で簡単',
+          benefitText1: '複雑な設定なしで、すぐに共有可能なダウンロードリンクを作成できます。',
+          benefitTitle2: 'プライバシー重視',
+          benefitText2: 'ファイルはブラウザ内に保たれ、ローカルで安全に管理されます。',
+          benefitTitle3: 'さまざまなファイルに対応',
+          benefitText3: '文書、画像、PDF、音声など、多くの一般的なファイル形式に対応しています。',
+          termsTitle: '利用規約',
+          termsText: 'このツールは利便性と個人利用のために提供されています。違法・有害・不正な目的で使用しないことに同意したものとみなします。',
+          termsPolicy: 'ユーザーは、ポルノ、性的表現、児童性的虐待、マルウェア、海賊版、ヘイトスピーチ、暴力的コンテンツ、詐欺、その他法律に違反するコンテンツをアップロードまたは共有できません。',
+          privacyTitle: 'プライバシーポリシー',
+          privacyText: 'ファイルはブラウザ内でローカル処理され、デフォルトではサーバーにアップロードされません。ページを離れるとファイルは保存されません。',
+          contactTitle: 'お問い合わせ',
+          contactText: 'サポートや質問がある場合はTelegramでご連絡ください。'
+        },
+        ko: {
+          heroTitle: '모든 파일을 다운로드 링크로 변환하세요.',
+          heroText: '문서, 이미지 또는 기타 파일을 업로드하면 바로 공유 가능한 다운로드 링크를 만들 수 있습니다.',
+          policyText: '금지된 업로드에는 포르노, 성인 콘텐츠, 불법 자료, 악성코드, 혐오 콘텐츠 및 기타 유해하거나 불법적인 파일이 포함됩니다.',
+          uploadText: '여기에 파일을 드래그하거나 클릭하여 선택',
+          uploadSubtitle: '이미지, 문서, PDF, 오디오 등 다양한 형식 지원',
+          chip1: '즉시 변환',
+          chip2: '브라우저 기반',
+          chip3: '업로드 불필요',
+          benefitTitle1: '빠르고 간단',
+          benefitText1: '복잡한 설정 없이 바로 공유 가능한 다운로드 링크를 만드세요.',
+          benefitTitle2: '개인정보 보호 중심',
+          benefitText2: '파일은 브라우저 안에 유지되어 로컬에서 안전하게 처리됩니다.',
+          benefitTitle3: '다양한 파일 지원',
+          benefitText3: '문서, 이미지, PDF, 오디오 및 기타 일반 파일 형식을 사용할 수 있습니다.',
+          termsTitle: '서비스 약관',
+          termsText: '이 도구는 편의와 개인용으로 제공됩니다. 불법적이거나 유해한 목적, 또는 악용 목적이 아닌 책임감 있는 방식으로 사용해야 합니다.',
+          termsPolicy: '사용자는 포르노, 노골적인 성 콘텐츠, 아동 성착취물, 악성코드, 불법 복제물, 혐오 발언, 폭력적 콘텐츠, 사기 또는 기타 법률을 위반하는 콘텐츠를 업로드하거나 공유할 수 없습니다.',
+          privacyTitle: '개인정보 처리방침',
+          privacyText: '파일은 브라우저에서 로컬로 처리되며 기본적으로 서버에 업로드되지 않습니다. 페이지를 나가면 파일을 보관하지 않습니다.',
+          contactTitle: '문의하기',
+          contactText: '도움이 필요하거나 질문이 있으면 Telegram으로 문의해 주세요.'
+        },
+        zh: {
+          heroTitle: '将任何文件转换成可下载链接。',
+          heroText: '上传文档、图片或其他文件，即可快速生成可分享的下载链接。',
+          policyText: '禁止上传包括色情、性内容、非法材料、恶意软件、仇恨内容以及其他危害或违法的文件。',
+          uploadText: '将文件拖到此处或点击选择',
+          uploadSubtitle: '支持图片、文档、PDF、音频等多种文件',
+          chip1: '即时转换',
+          chip2: '基于浏览器',
+          chip3: '无需上传',
+          benefitTitle1: '快速简单',
+          benefitText1: '无需复杂设置，即可快速创建可分享下载链接。',
+          benefitTitle2: '设计上注重隐私',
+          benefitText2: '文件保留在浏览器中，内容保持本地化和安全性。',
+          benefitTitle3: '适用于多种文件',
+          benefitText3: '适用于文档、图片、PDF、音频和其他常见文件类型。',
+          termsTitle: '服务条款',
+          termsText: '本工具仅为方便使用和个人使用而提供。您同意以负责任的方式使用，并且不得用于违法、有害或滥用的活动。',
+          termsPolicy: '用户不得上传或分享违法内容，包括色情、露骨性内容、儿童色情内容、恶意软件、盗版内容、仇恨言论、暴力内容、诈骗或任何违反当地、国家或国际法律的内容。',
+          privacyTitle: '隐私政策',
+          privacyText: '文件在浏览器中本地处理，默认不会上传到我们的服务器。离开页面后，我们不会存储您的文件。',
+          contactTitle: '联系我们',
+          contactText: '如需帮助或提问，请通过 Telegram 联系我们。'
+        }
+      };
+
+      let selectedFiles = [];
+      let generatedFileId = null;
+      let generatedProtected = false;
+      let generatedFileName = '';
+      let generatedObjectUrl = null;
+      let hasAcceptedTerms = false;
+
+      const USER_INFO_KEY = 'linkify_user_info';
+      const USER_LOGS_KEY = 'linkify_user_logs';
+      const MAX_LOGS = 200;
+
+      function isOwnerView() {
+        const params = new URLSearchParams(window.location.search);
+        const explicitOwnerFlag = ['1', 'true', 'yes'].includes((params.get('owner') || '').toLowerCase());
+        const host = window.location.hostname.toLowerCase();
+        const localhostHost = ['localhost', '127.0.0.1', '::1'].includes(host);
+        const privateIpMatch = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[0-1])\.)/.test(host);
+        return explicitOwnerFlag || localhostHost || privateIpMatch;
+      }
+
+      function applyAdVisibility() {
+        const ads = document.querySelectorAll('.ad-banner');
+        const isOwner = isOwnerView();
+
+        ads.forEach((ad) => {
+          ad.classList.toggle('ad-empty', isOwner);
+          ad.classList.toggle('ad-visible', !isOwner);
+
+          if (isOwner) {
+            ad.textContent = 'Ad Space';
+            ad.setAttribute('aria-label', 'Advertisement slot hidden for owner view');
+          } else {
+            ad.innerHTML = '<span style="display:block;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.8;">Sponsored</span><span style="display:block;font-size:1.2rem;font-weight:700;margin-top:6px;">Premium Cloud Tools</span><span style="display:block;font-size:0.8rem;opacity:0.9;margin-top:4px;">Smart storage for growing teams</span>';
+            ad.setAttribute('aria-label', 'Advertisement slot');
+          }
+        });
+      }
+
+      function safeParseJson(value, fallback) {
+        if (value === null || value === undefined || value === '') {
+          return Array.isArray(fallback) ? [...fallback] : fallback;
+        }
+
+        try {
+          const parsed = JSON.parse(value);
+          return parsed === null ? fallback : parsed;
+        } catch (error) {
+          return Array.isArray(fallback) ? [...fallback] : fallback;
+        }
+      }
+
+      function saveUserInfo() {
+        const visitorId = localStorage.getItem('linkify_visitor_id') || `visitor_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        const userInfo = {
+          visitorId,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          referrer: document.referrer || null,
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          languages: navigator.languages || [],
+          platform: navigator.platform,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+          screen: {
+            width: window.screen?.width || null,
+            height: window.screen?.height || null,
+            colorDepth: window.screen?.colorDepth || null
+          }
+        };
+
+        localStorage.setItem('linkify_visitor_id', visitorId);
+        localStorage.setItem(USER_INFO_KEY, JSON.stringify(userInfo));
+        return userInfo;
+      }
+
+      function getStoredLogs() {
+        const stored = safeParseJson(localStorage.getItem(USER_LOGS_KEY), []);
+        return Array.isArray(stored) ? stored : [];
+      }
+
+      async function sendLogToServer(action, details = {}) {
+        try {
+          const payload = {
+            visitorId: localStorage.getItem('linkify_visitor_id') || null,
+            userInfo: JSON.parse(localStorage.getItem(USER_INFO_KEY) || 'null'),
+            event: action,
+            details
+          };
+
+          await fetch('/api/logs', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        } catch (error) {
+          console.warn('Server log failed:', error);
+        }
+      }
+
+      function appendLog(action, details = {}) {
+        try {
+          const logs = getStoredLogs();
+          const entry = {
+            visitorId: localStorage.getItem('linkify_visitor_id') || 'anonymous',
+            timestamp: new Date().toISOString(),
+            action,
+            details
+          };
+
+          logs.push(entry);
+          localStorage.setItem(USER_LOGS_KEY, JSON.stringify(logs.slice(-MAX_LOGS)));
+          sendLogToServer(action, details);
+        } catch (error) {
+          console.error('Unable to save log entry:', error);
+        }
+      }
+
+      function applyLanguage(locale) {
+        const selectedLocale = translations[locale] ? locale : 'en';
+        const items = document.querySelectorAll('[data-i18n]');
+        const dict = translations[selectedLocale];
+
+        document.documentElement.lang = selectedLocale === 'ar' ? 'ar' : selectedLocale;
+        document.body.dir = selectedLocale === 'ar' ? 'rtl' : 'ltr';
+        languageSelect.value = selectedLocale;
+
+        items.forEach((element) => {
+          const key = element.dataset.i18n;
+          if (dict[key]) {
+            element.textContent = dict[key];
+          }
+        });
+
+        localStorage.setItem('language', selectedLocale);
+        appendLog('language_changed', { locale: selectedLocale });
+      }
+
+      function formatBytes(bytes) {
+        if (!bytes) return '0 KB';
+        const units = ['B', 'KB', 'MB', 'GB'];
+        const exp = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        const value = bytes / Math.pow(1024, exp);
+        return `${value.toFixed(value >= 10 || exp === 0 ? 0 : 1)} ${units[exp]}`;
+      }
+
+      function updateStatus(message, isError = false) {
+        status.textContent = message;
+        status.classList.toggle('error', isError);
+        status.classList.toggle('success', !isError && message.length > 0);
+      }
+
+      function updateLinkActions() {
+        const hasUrl = Boolean(urlOutput.value.trim());
+        linkRow.hidden = !hasUrl;
+        linkRow.style.display = hasUrl ? 'flex' : 'none';
+        copyBtn.hidden = !hasUrl;
+        copyBtn.style.display = hasUrl ? 'inline-flex' : 'none';
+        previewLink.hidden = !hasUrl;
+        previewLink.style.display = hasUrl ? 'inline-flex' : 'none';
+        emailBtn.hidden = !hasUrl;
+        emailBtn.style.display = hasUrl ? 'inline-flex' : 'none';
+        copyBtn.disabled = !hasUrl;
+        emailBtn.disabled = !hasUrl;
+        previewLink.style.visibility = hasUrl ? 'visible' : 'hidden';
+        if (!hasUrl) {
+          qrWrap.classList.add('blurred');
+          qrWrap.setAttribute('aria-label', 'QR code hidden until the link is generated');
+        }
+      }
+
+      function updateConsentState() {
+        const isAllowed = hasAcceptedTerms;
+        fileInput.disabled = !isAllowed;
+        generateBtn.disabled = !isAllowed || selectedFiles.length === 0;
+        dropZone.style.opacity = isAllowed ? '1' : '0.55';
+        dropZone.style.cursor = isAllowed ? 'pointer' : 'not-allowed';
+      }
+
+      function setSelectedFiles(files) {
+        selectedFiles = files;
+
+        if (!selectedFiles.length) {
+          fileCard.classList.remove('visible');
+          fileName.textContent = 'No file selected';
+          fileSize.textContent = '0 KB';
+          previewContent.textContent = 'Select a file to preview it here.';
+          updateConsentState();
+          return;
+        }
+
+        fileCard.classList.add('visible');
+        fileName.textContent = selectedFiles.length === 1 ? selectedFiles[0].name : `${selectedFiles.length} files selected`;
+        fileSize.textContent = formatBytes(selectedFiles.reduce((total, file) => total + file.size, 0));
+        const file = selectedFiles[0];
+        const objectUrl = URL.createObjectURL(file);
+        if (file.type.startsWith('image/')) previewContent.innerHTML = `<img src="${objectUrl}" alt="Selected image preview">`;
+        else if (file.type === 'application/pdf') previewContent.innerHTML = `<iframe src="${objectUrl}" title="PDF preview"></iframe>`;
+        else if (file.type.startsWith('video/')) previewContent.innerHTML = `<video src="${objectUrl}" controls></video>`;
+        else previewContent.textContent = `${file.name} is ready to share.`;
+        updateConsentState();
+      }
+
+      function revokeGeneratedUrl() {
+        if (generatedObjectUrl) {
+          URL.revokeObjectURL(generatedObjectUrl);
+          generatedObjectUrl = null;
+        }
+      }
+
+      async function generateLink() {
+        if (!hasAcceptedTerms) {
+          appendLog('generate_without_consent');
+          updateStatus('Please accept the terms before using this website.', true);
+          return;
+        }
+
+        if (!selectedFiles.length) {
+          appendLog('generate_clicked_without_file');
+          updateStatus('Please choose a file first.', true);
+          return;
+        }
+
+        generateBtn.disabled = true;
+        updateStatus('Generating your downloadable link...');
+
+        try {
+          revokeGeneratedUrl();
+
+          const password = passwordToggle.checked ? filePassword.value : '';
+          if (passwordToggle.checked && !password.trim()) throw new Error('Enter a password or turn password protection off.');
+          const uploads = await Promise.all(selectedFiles.map(async (file) => {
+            const response = await fetch('/api/files', { method: 'POST', headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': file.name, 'X-Expires-Hours': expiresHours.value, 'X-File-Password': password, 'X-Auto-Delete': String(autoDelete.checked), 'X-Session-Id': localStorage.getItem('linkify_visitor_id') || '' }, body: new Uint8Array(await file.arrayBuffer()) });
+            return { response, payload: await response.json() };
+          }));
+          if (uploads.some(({ response, payload }) => !response.ok || !payload.ok)) throw new Error('Failed to upload one or more files.');
+          let payload = uploads[0].payload;
+          if (selectedFiles.length > 1) {
+            const response = await fetch('/api/bundles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileIds: uploads.map(({ payload: item }) => item.fileId), fileName: 'linkify-files.zip', expiresHours: expiresHours.value, password, autoDelete: autoDelete.checked }) });
+            payload = await response.json();
+          }
+
+          if (!payload.ok || !payload.downloadUrl) {
+            throw new Error(payload.error || 'Failed to upload the file to the server.');
+          }
+
+          const serverUrl = new URL(payload.shareUrl || payload.downloadUrl, window.location.origin).href;
+          urlOutput.value = serverUrl;
+          previewLink.href = serverUrl;
+          generatedFileId = payload.fileId;
+          generatedProtected = Boolean(payload.protected);
+          generatedFileName = payload.fileName || selectedFiles[0].name;
+          previewLink.removeAttribute('download');
+          previewLink.textContent = 'Download';
+          qrWrap.classList.remove('blurred');
+          updateLinkActions();
+          appendLog('link_generated', {
+            fileName: payload.fileName || selectedFiles[0].name,
+            fileSize: selectedFiles.reduce((total, file) => total + file.size, 0),
+            fileType: selectedFiles[0].type || 'unknown',
+            fileId: generatedFileId,
+            downloadUrl: serverUrl
+          });
+          qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=${encodeURIComponent(serverUrl)}`;
+          qrWrap.classList.remove('blurred');
+          qrWrap.setAttribute('aria-label', 'Generated QR code for sharing the link');
+          analyticsPanel.hidden = false;
+          loadAnalytics();
+          updateStatus('Link generated successfully.');
+        } catch (error) {
+          appendLog('link_generation_error', { message: error.message });
+          updateStatus(error.message || 'Something went wrong while creating the downloadable link.', true);
+        } finally {
+          generateBtn.disabled = false;
+        }
+      }
+
+      async function handleFileSelection(files) {
+        if (!hasAcceptedTerms) {
+          updateStatus('Please accept the terms before using this website.', true);
+          fileInput.value = '';
+          return;
+        }
+
+        if (!files.length) return;
+
+        const oversizedFile = files.find((file) => file.size > MAX_FILE_SIZE);
+        const totalSize = files.reduce((total, file) => total + file.size, 0);
+        if (oversizedFile || totalSize > MAX_FILE_SIZE) {
+          fileInput.value = '';
+          setSelectedFiles([]);
+          updateStatus(oversizedFile
+            ? `${oversizedFile.name} is larger than the 1 GB limit.`
+            : 'The selected files exceed the 1 GB total upload limit.', true);
+          appendLog('file_rejected_size', { fileCount: files.length, totalSize });
+          return;
+        }
+
+        revokeGeneratedUrl();
+        setSelectedFiles(files);
+        appendLog('file_selected', {
+          fileCount: files.length,
+          fileNames: files.map((file) => file.name)
+        });
+        updateStatus('File ready. Click “Generate Link” to create the download link.');
+      }
+
+      fileInput.addEventListener('change', (event) => {
+        handleFileSelection(Array.from(event.target.files));
+      });
+
+      termsConsent.addEventListener('change', (event) => {
+        hasAcceptedTerms = event.target.checked;
+        appendLog(hasAcceptedTerms ? 'terms_accepted' : 'terms_revoked');
+        updateConsentState();
+
+        if (!hasAcceptedTerms) {
+          fileInput.value = '';
+          revokeGeneratedUrl();
+          setSelectedFiles([]);
+          urlOutput.value = '';
+          previewLink.href = '#';
+          previewLink.removeAttribute('download');
+          previewLink.textContent = 'Download';
+          updateLinkActions();
+          generatedProtected = false;
+          updateStatus('Terms must be accepted before using the service.', true);
+        } else {
+          updateStatus('Terms accepted. You can now use the tool.');
+        }
+      });
+
+      reportForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const match = reportFileId.value.trim().match(/(?:\/share\/)?([a-f0-9-]{36})/i);
+        if (!match) {
+          reportStatus.textContent = 'Enter a valid share link or file ID.';
+          reportStatus.classList.add('error');
+          return;
+        }
+        reportStatus.textContent = 'Submitting report...';
+        reportStatus.classList.remove('error');
+        try {
+          const response = await fetch('/api/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileId: match[1], reason: reportReason.value, details: reportDetails.value })
+          });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) throw new Error(payload.error || 'Could not submit report.');
+          reportStatus.textContent = 'Report received. Thank you.';
+          reportForm.reset();
+        } catch (error) {
+          reportStatus.textContent = error.message;
+          reportStatus.classList.add('error');
+        }
+      });
+
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragover');
+        });
+      });
+
+      dropZone.addEventListener('drop', (event) => {
+        handleFileSelection(Array.from(event.dataTransfer.files));
+        fileInput.value = '';
+      });
+
+      generateBtn.addEventListener('click', generateLink);
+
+      copyBtn.addEventListener('click', async () => {
+        if (!urlOutput.value) {
+          appendLog('copy_clicked_without_link');
+          updateStatus('Generate a download link before copying.', true);
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(urlOutput.value);
+          appendLog('link_copied', { url: urlOutput.value });
+          copyBtn.textContent = 'Copied';
+          updateStatus('Download link copied to clipboard.');
+          window.setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 1800);
+        } catch (error) {
+          urlOutput.focus();
+          urlOutput.select();
+          document.execCommand('copy');
+          appendLog('link_copy_fallback', { url: urlOutput.value });
+          copyBtn.textContent = 'Copied';
+          window.setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 1800);
+          updateStatus('Download link selected — copy it manually if needed.');
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        if (!hasAcceptedTerms) {
+          updateStatus('Please accept the terms before using this website.', true);
+          return;
+        }
+
+        fileInput.value = '';
+        revokeGeneratedUrl();
+        setSelectedFiles([]);
+        urlOutput.value = '';
+        previewLink.href = '#';
+        previewLink.removeAttribute('download');
+        previewLink.textContent = 'Download';
+        updateLinkActions();
+        generatedProtected = false;
+        appendLog('form_reset');
+        updateStatus('Ready to convert another file.');
+      });
+
+      languageSelect.addEventListener('change', (event) => {
+        applyLanguage(event.target.value);
+      });
+
+      passwordToggle.addEventListener('change', () => {
+        filePassword.disabled = !passwordToggle.checked;
+        if (!passwordToggle.checked) filePassword.value = '';
+      });
+
+      previewLink.addEventListener('click', (event) => {
+        if (!urlOutput.value) {
+          event.preventDefault();
+          return updateStatus('Generate a download link first.', true);
+        }
+        event.preventDefault();
+        window.open(urlOutput.value, '_blank', 'noopener');
+        window.setTimeout(loadAnalytics, 800);
+      });
+
+      analyticsRefresh.addEventListener('click', loadAnalytics);
+
+      emailBtn.addEventListener('click', () => {
+        if (!urlOutput.value) return updateStatus('Generate a link before emailing it.', true);
+        emailRecipient.value = '';
+        emailDialog.hidden = false;
+        emailRecipient.focus();
+      });
+
+      emailCancel.addEventListener('click', () => {
+        emailDialog.hidden = true;
+      });
+
+      emailSend.addEventListener('click', () => {
+        const recipients = emailRecipient.value.split(',').map((email) => email.trim()).filter(Boolean);
+        if (!recipients.length) return updateStatus('Enter at least one recipient email address.', true);
+        emailSend.disabled = true;
+        fetch('/api/email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recipients, link: urlOutput.value, fileName: generatedFileName }) })
+          .then(async (response) => ({ response, payload: await response.json() }))
+          .then(({ response, payload }) => {
+            if (!response.ok || !payload.ok) throw new Error(payload.error || 'The email could not be sent.');
+            emailDialog.hidden = true;
+            appendLog('email_link_sent', { recipients: payload.recipients });
+            updateStatus(`Link sent to ${payload.recipients.length} recipient${payload.recipients.length === 1 ? '' : 's'}.`);
+          })
+          .catch((error) => updateStatus(error.message, true))
+          .finally(() => { emailSend.disabled = false; });
+      });
+
+      webhookBtn.addEventListener('click', async () => {
+        if (!urlOutput.value || !webhookUrl.value) return updateStatus('Generate a link and enter a webhook URL first.', true);
+        const response = await fetch('/api/webhooks', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: webhookUrl.value, link: urlOutput.value }) });
+        updateStatus(response.ok ? 'Link sent to webhook.' : 'Webhook delivery failed.', !response.ok);
+      });
+
+      async function loadAnalytics() {
+        if (!generatedFileId) return;
+        const response = await fetch(`/api/files/${generatedFileId}/analytics`);
+        if (!response.ok) return;
+        const data = await response.json();
+        analyticsSummary.textContent = `${data.file.download_count} downloads / opens - expires ${data.file.expires_at ? new Date(data.file.expires_at).toLocaleString() : 'never'}`;
+        analyticsRows.innerHTML = data.events.length
+          ? data.events.map((event) => `<tr><td>opened / downloaded</td><td>${new Date(event.created_at).toLocaleString()}</td></tr>`).join('')
+          : '<tr><td colspan="2">No downloads yet.</td></tr>';
+      }
+
+      try {
+        saveUserInfo();
+        appendLog('page_loaded', {
+          path: window.location.pathname,
+          referrer: document.referrer || null,
+          language: navigator.language
+        });
+      } catch (error) {
+        console.error('Unable to initialize user tracking:', error);
+      }
+
+      updateConsentState();
+      updateLinkActions();
+      applyAdVisibility();
+      passwordToggle.dispatchEvent(new Event('change'));
+      const savedLanguage = localStorage.getItem('language') || 'en';
+      applyLanguage(savedLanguage);
+      updateLinkActions();
+    </script>
+  </body>
+</html>

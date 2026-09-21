@@ -1,0 +1,15 @@
+services:
+  linkify:
+    build:
+      context: .
+    image: linkify:latest
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: 3000
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

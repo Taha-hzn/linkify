@@ -1,0 +1,18 @@
+{
+  "name": "linkify-logging",
+  "version": "1.0.0",
+  "description": "Linkify site with server-side logging to PostgreSQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "nodemailer": "^9.0.5",
+    "pg": "^8.16.3"
+  }
+}
