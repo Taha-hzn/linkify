@@ -817,7 +817,10 @@
             const response = await fetch('/api/files', { method: 'POST', headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': file.name, 'X-Expires-Hours': expiresHours.value, 'X-File-Password': password, 'X-Auto-Delete': String(autoDelete.checked), 'X-Session-Id': localStorage.getItem('linkify_visitor_id') || '' }, body: new Uint8Array(await file.arrayBuffer()) });
             return { response, payload: await response.json() };
           }));
-          if (uploads.some(({ response, payload }) => !response.ok || !payload.ok)) throw new Error('Failed to upload one or more files.');
+          const failedUpload = uploads.find(({ response, payload }) => !response.ok || !payload.ok);
+          if (failedUpload) {
+            throw new Error(failedUpload.payload.error || `Upload failed with status ${failedUpload.response.status}.`);
+          }
           let payload = uploads[0].payload;
           if (selectedFiles.length > 1) {
             const response = await fetch('/api/bundles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileIds: uploads.map(({ payload: item }) => item.fileId), fileName: 'linkify-files.zip', expiresHours: expiresHours.value, password, autoDelete: autoDelete.checked }) });

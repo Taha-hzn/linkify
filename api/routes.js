@@ -32,12 +32,22 @@ module.exports = function createApiRoutes({
     return recent.length > maxUploadsPerWindow;
   }
 
+  function ensureUploadStorage() {
+    try {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+      return true;
+    } catch (error) {
+      console.error('Failed to prepare file storage:', error.message);
+      return false;
+    }
+  }
+
   router.get('/health', (req, res) => {
     res.json({ ok: true, message: 'Server is running', database: 'PostgreSQL' });
   });
 
   router.post('/files', require('express').raw({ type: '*/*', limit: `${MAX_FILE_SIZE}b` }), (req, res) => {
-    if (!fs.existsSync(uploadsDir)) {
+    if (!ensureUploadStorage()) {
       return res.status(503).json({ ok: false, error: 'File storage is not configured.' });
     }
 
@@ -114,7 +124,7 @@ module.exports = function createApiRoutes({
   });
 
   router.post('/bundles', (req, res) => {
-    if (!fs.existsSync(uploadsDir)) {
+    if (!ensureUploadStorage()) {
       return res.status(503).json({ ok: false, error: 'File storage is not configured.' });
     }
 

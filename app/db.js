@@ -7,6 +7,7 @@ function ensureDirectories(rootDir) {
   const uploadsDir = path.join(dataDir, 'uploads');
 
   fs.mkdirSync(dataDir, { recursive: true });
+  fs.mkdirSync(uploadsDir, { recursive: true });
 
   return { dataDir, uploadsDir };
 }
